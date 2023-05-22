@@ -1,68 +1,68 @@
 const db = require("../db/dbConfig.js");
 
-const getAllUsers = async () => {
+const getAllProducts = async () => {
     try {
-        const allUsers = await db.any("SELECT * FROM users");
-        return allUsers;
+        const allProducts = await db.any("SELECT * FROM products");
+        return allProducts;
     } catch(error) {
         return {error: error}
     }
 }
 
-const getOneUser = async (id) => {
+const getOneProduct = async (id) => {
     try {
-        const user = await db.one(`SELECT * FROM users WHERE id=${id}`)
-        return user;
+        const product = await db.one(`SELECT * FROM products WHERE id=${id}`)
+        return product;
     }catch (error) {
         return {error: error};
     }
 }
 
-const createUser = async (user) => {
+const createProduct = async (product) => {
     try{ 
-        const newUser = await db.one(
+        const newProduct = await db.one(
             `INSERT INTO
-            users(name, image, age, fit_category, start_weight, goal_weight, present_weight)
+            products(rating, name, image, description, cost, category, benefit, benefit_two, benefit_three, is_popular)
             VALUES
-            ($1, $2, $3, $4, $5, $6, $7)
+            ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
             RETURNING *;`,
-            [user.name, user.image, user.age, user.fit_category, user.start_weight, user.goal_weight, user.present_weight]
+            [product.rating, product.name, product.image, product.description, product.cost, product.category, product.benefit, product.benefit_two, product.benefit_three, product.is_popular]
         );
-        return newUser;
+        return newProduct;
     }catch(error) {
         return {error: error};
     }
 }
 
-const updateUser = async (id, user) => {
+const updateProduct = async (id, product) => {
     try{
-        const updatedUser = await db.one(
-            `UPDATE users SET name=$1, image=$2, age=$3, fit_category=$4, start_weight=$5, goal_weight=$6, present_weight=$7 WHERE id=$8 RETURNING * `,
-            [user.name, user.image, user.age, user.fit_category, user.start_weight, user.goal_weight, user.present_weight, id]
+        const updatedProduct = await db.one(
+            `UPDATE products SET rating =$1, name=$2, image=$3, description=$4, cost=$5, category=$6, benefit=$7, benefit_two=$8, benefit_three=$9, is_popular=$10 WHERE id=$11 RETURNING * `,
+            [product.rating, product.name, product.image, product.description, product.cost, product.category, product.benefit, product.benefit_two, product.benefit_three, product.is_popular, id]
         );
-        return updatedUser;
+        return updatedProduct;
     }catch (error){
         return { error: error };
     }
 }
 
-const deleteUser = async (id) => {
+const deleteProduct = async (id) => {
     try {
-        const deletedUser = await db.one(
-            "DELETE FROM users WHERE id=$1 RETURNING *",
+        const deletedProduct = await db.one(
+            "DELETE FROM products WHERE id=$1 RETURNING *",
             id
         );
-        return deletedUser;
+        return deletedProduct;
     } catch(error){
         return error; 
     }
 }
 
 module.exports = {
-    getAllUsers,
-    getOneUser,
-    createUser,
-    updateUser,
-    deleteUser
+    getAllProducts,
+    getOneProduct,
+    createProduct,
+    updateProduct,
+    deleteProduct
 
 }

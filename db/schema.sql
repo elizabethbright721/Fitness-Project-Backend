@@ -3,21 +3,24 @@ CREATE DATABASE fitness_dev;
 
 \c fitness_dev;
 
-CREATE TABLE users (
+CREATE TABLE products (
     id SERIAL PRIMARY KEY,
+    rating TEXT,
     name TEXT NOT NULL,
     image TEXT NOT NULL,
-    age INT,
-    fit_category TEXT,
-    start_weight INT,
-    goal_weight INT,
-    present_weight INT
+    description TEXT,
+    cost DECIMAL,
+    category TEXT,
+    benefit TEXT,
+    benefit_two TEXT,
+    benefit_three TEXT,
+    is_popular BOOLEAN
 );
 
--- CREATE TABLE diet (
+-- CREATE TABLE ingredients (
 --     id INT,
---     num_meals INT,
---     cal_goals INT,
---     on_track BOOLEAN
+--     name TEXT,
+--     ingred_1 TEXT,
+--     ingred_2 TEXT,
 -- )
 

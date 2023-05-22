@@ -1,27 +1,28 @@
 const express = require("express");
 const fitness = express.Router();
 const {
-    getAllUsers,
-    getOneUser,
-    createUser,
-    updateUser,
-    deleteUser
+    getAllProducts,
+    getOneProduct,
+    createProduct,
+    updateProduct,
+    deleteProduct
 } = require("../queries/fitness.js")
 
 //INDEX
 fitness.get("/", async (req, res) => {
-    const allUsers = await getAllUsers();
-    res.status(200).json(allUsers);
+    const allProducts = await getAllProducts();
+    allProducts.sort((productA, prodcuctB) => productA.id - prodcuctB.id);
+    res.status(200).json(allProducts);
 })
 
 //SHOW
 fitness.get("/:id", async (req, res) => {
     const { id } = req.params;
-    const user = await getOneUser(id);
-    if(!user.error){
-        res.status(200).json(user);
-    }else if (user.error.code === 0) {
-        res.status(404).json("user not found")
+    const product = await getOneProduct(id);
+    if(!product.error){
+        res.status(200).json(product);
+    }else if (product.error.code === 0) {
+        res.status(404).json("Product not found")
     } else {
         res.status(500).json({error: "server error"})
     }
@@ -29,18 +30,21 @@ fitness.get("/:id", async (req, res) => {
 
 //CREATE
 fitness.post("/", async (req, res) => {
-    const { name, image, age, fit_category, start_weight, goal_weight, present_weight } = req.body;
-    const newUser = await createUser({
-        name,  
-        image,
-        age, 
-        fit_category,  
-        start_weight, 
-        goal_weight, 
-        present_weight
+    const { rating, name, image, description, cost, category, benefit, benefit_two, benefit_three, is_popular } = req.body;
+    const newProduct = await createProduct({
+        rating,
+        name, 
+        image, 
+        description, 
+        cost, 
+        category, 
+        benefit, 
+        benefit_two, 
+        benefit_three, 
+        is_popular
     });
-    if(!newUser.error) {
-        res.status(201).json(newUser);
+    if(!newProduct.error) {
+        res.status(201).json(newProduct);
     }else {
         res.status(500).json({error:"server error"})
     }
@@ -49,10 +53,10 @@ fitness.post("/", async (req, res) => {
 //UPDATE
 fitness.put("/:id", async (req, res) => {
     const { id } = req.params;
-    const user = req.body;
-    const updatedUser = await updateUser(id, user);
-    if(!updatedUser.error){
-        res.status(201).json(updatedUser)
+    const product = req.body;
+    const updatedProduct = await updateProduct(id, product);
+    if(!updatedProduct.error){
+        res.status(201).json(updatedProduct)
     } else {
         res.status(500).json({error: "server error"})
     } 
@@ -61,9 +65,9 @@ fitness.put("/:id", async (req, res) => {
 //DELETE
 fitness.delete("/:id", async (req, res) => {
     const {id} = req.params;
-    const deletedUser = await deleteUser(id);
-    if(deletedUser.id) {
-        res.status(201).json(deletedUser)
+    const deletedProduct = await deleteProduct(id);
+    if(deletedProduct.id) {
+        res.status(201).json(deletedProduct)
     }else {
         res.status(404).json("User not found.")
     }
